@@ -21,6 +21,13 @@ namespace FarmersApp.Controllers
         // GET: Farmers
         public async Task<IActionResult> Index(int id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
+            
             var applicationDbContext = _context.Farmers.Include(f => f.Employee).Where(e => e.EmployeeId == id); // Retrieve the list of farmers for a specific employee
             return View(await applicationDbContext.ToListAsync());
         }
@@ -28,6 +35,12 @@ namespace FarmersApp.Controllers
         // GET: Farmers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Farmers == null)
             {
                 return NotFound();
@@ -47,6 +60,12 @@ namespace FarmersApp.Controllers
         // GET: Farmers/Create
         public IActionResult Create()
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeId");
             return View();
         }
@@ -58,6 +77,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Surname,Email,EmployeeId")] Farmer farmer)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(farmer);
@@ -71,6 +96,12 @@ namespace FarmersApp.Controllers
         // GET: Farmers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Farmers == null)
             {
                 return NotFound();
@@ -92,6 +123,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FarmerId,Name,Surname,Email,EmployeeId")] Farmer farmer)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id != farmer.FarmerId)
             {
                 return NotFound();
@@ -124,6 +161,12 @@ namespace FarmersApp.Controllers
         // GET: Farmers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Farmers == null)
             {
                 return NotFound();
@@ -145,6 +188,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (_context.Farmers == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Farmers'  is null.");

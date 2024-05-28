@@ -19,6 +19,12 @@ namespace FarmersApp.Controllers
         }
          public async Task<IActionResult> FarmerProducts(int FarmerId, int CategoryId, DateTime startDate, DateTime endDate)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Employee")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
             ViewData["FarmerId"] = new SelectList(_context.Farmers, "FarmerId", "Name");
             var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.FarmerNavigation).Where(e => e.FarmerNavigation.FarmerId == FarmerId && e.CategoryId == CategoryId && (e.ProductionDate >= startDate && e.ProductionDate <= endDate ));
@@ -27,6 +33,12 @@ namespace FarmersApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index(int id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.FarmerNavigation).Where(e => e.FarmerNavigation.FarmerId == id);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -34,6 +46,12 @@ namespace FarmersApp.Controllers
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Products == null)
             {
                 return NotFound();
@@ -54,6 +72,12 @@ namespace FarmersApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
             return View();
         }
@@ -65,6 +89,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,ProductionDate,CategoryId")] Product product)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (ModelState.IsValid)
             {
                 product.Farmer = 1;
@@ -80,6 +110,12 @@ namespace FarmersApp.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Products == null)
             {
                 return NotFound();
@@ -101,6 +137,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,ProductionDate,CategoryId,Farmer")] Product product)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id != product.ProductId)
             {
                 return NotFound();
@@ -134,6 +176,12 @@ namespace FarmersApp.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (id == null || _context.Products == null)
             {
                 return NotFound();
@@ -156,6 +204,12 @@ namespace FarmersApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (User.Identity != null && !User.Identity.IsAuthenticated || (!User.IsInRole("Farmer")))
+            {
+
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
+
+            }
             if (_context.Products == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Products'  is null.");
