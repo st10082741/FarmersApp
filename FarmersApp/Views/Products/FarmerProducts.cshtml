@@ -1,0 +1,94 @@
+﻿@model IEnumerable<FarmersApp.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    var dateTime = DateTime.Now;
+}
+
+<h1>Index</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label class="control-label">Farmer</label>
+            <select class="form-control" id = "FarmerId" asp-items="ViewBag.FarmerId"></select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label  class="control-label"> Category </label>
+            <select class="form-control" id ="CategoryId" asp-items="ViewBag.CategoryId"></select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label class="control-label">Start Date</label>
+            <input type="datetime-local" id = "startDateTime" value="@dateTime" class="form-control" />
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label class="control-label">End Date</label>
+            <input type="datetime-local"  id ="endDateTime"class="form-control"/>
+        </div>
+
+    </div>
+</div>
+<div class="row"> 
+    <button onclick="Filter();" class="col-md-3">Filter</button>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+        </tr>
+
+}
+    </tbody>
+</table>
+
+<script>
+  
+    function Filter() {
+        
+        var catID = document.getElementById("CategoryId").value;
+        var StartDate = document.getElementById("startDateTime").value;
+        var eDate = document.getElementById("endDateTime").value;
+        var FarmerID = document.getElementById("FarmerId").value;
+
+        if (catID && StartDate && eDate && FarmerID) {
+            window.location.href = '/Products/FarmerProducts?FarmerId=' + FarmerID + '&CategoryId=' + catID + '&startDate=' + StartDate + '&EndDate=' + eDate;
+           
+        }
+
+    }
+</script>
