@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -165,8 +166,15 @@ namespace FarmersApp.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        //  await _signInManager.SignInAsync(user, isPersistent: false);
+                        var EmployeeID = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+
+                        if (EmployeeID != 0)
+                        {
+
+                            ViewData["EmployeeID"] = EmployeeID;
+                            return RedirectToAction("Index", "Farmers", new { id = EmployeeID });
+                        }
                     }
                 }
                 foreach (var error in result.Errors)

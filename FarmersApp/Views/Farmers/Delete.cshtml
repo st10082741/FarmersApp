@@ -40,6 +40,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="FarmerId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index" asp-route-id="1">Back to List</a>
+        <a asp-action="Index" asp-route-id="@ViewData["EmployeeID"]">Back to List</a>
     </form>
 </div>

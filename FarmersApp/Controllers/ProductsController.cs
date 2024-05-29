@@ -39,6 +39,20 @@ namespace FarmersApp.Controllers
                 return RedirectToPage("/Account/Login", new { Area = "Identity" });
 
             }
+            if (User.Identity != null)
+            {
+                if (User.IsInRole("Employee"))
+                {
+
+
+                    ViewData["EmployeeID"] = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+                }
+                else
+                {
+                    ViewData["FarmerID"] = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+                }
+            }
             var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.FarmerNavigation).Where(e => e.FarmerNavigation.FarmerId == id);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -97,10 +111,12 @@ namespace FarmersApp.Controllers
             }
             if (ModelState.IsValid)
             {
-                product.Farmer = 1;
+                var FarmerID = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+                product.Farmer = FarmerID;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new {id = 1});
+                return RedirectToAction(nameof(Index), new { id = FarmerID });
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
            
@@ -166,7 +182,9 @@ namespace FarmersApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index),new {id = 1});
+                var FarmerID = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+                return RedirectToAction(nameof(Index),new {id = FarmerID});
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
             ViewData["Farmer"] = new SelectList(_context.Farmers, "FarmerId", "FarmerId", product.Farmer);
@@ -221,7 +239,10 @@ namespace FarmersApp.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var FarmerID = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+         
+            return RedirectToAction(nameof(Index), new { id = FarmerID });
         }
 
         private bool ProductExists(int id)

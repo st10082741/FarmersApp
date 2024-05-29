@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using FarmersApp.Models;
 
 namespace FarmersApp.Areas.Identity.Pages.Account
 {
@@ -21,11 +23,12 @@ namespace FarmersApp.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        private readonly ApplicationDbContext _context;
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext Context)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = Context;
         }
 
         /// <summary>
@@ -114,6 +117,24 @@ namespace FarmersApp.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    if (User.Identity != null)
+                    {
+                        var EmployeeID = await _context.Employees.Where(x => x.Email.ToLower().Equals(Input.Email.ToLower())).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+
+                        if (EmployeeID!= 0)
+                        {
+
+                            ViewData["EmployeeID"] = EmployeeID;
+                            return RedirectToAction("Index", "Farmers", new { id = EmployeeID });
+                        }
+                        else
+                        {
+                         var FarmerID = await _context.Farmers.Where(x => x.Email.ToLower().Equals(Input.Email.ToLower())).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+                            ViewData["FarmerID"] = FarmerID;
+                            return RedirectToAction("Index","Products", new { id = FarmerID });
+                        }
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

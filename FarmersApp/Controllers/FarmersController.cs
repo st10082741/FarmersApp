@@ -27,7 +27,20 @@ namespace FarmersApp.Controllers
                 return RedirectToPage("/Account/Login", new { Area = "Identity" });
 
             }
-            
+            if (User.Identity != null)
+            {
+                if (User.IsInRole("Employee"))
+                {
+
+
+                    ViewData["EmployeeID"] = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+                }
+                else
+                {
+                    ViewData["FarmerID"] = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
+
+                }
+            }
             var applicationDbContext = _context.Farmers.Include(f => f.Employee).Where(e => e.EmployeeId == id); // Retrieve the list of farmers for a specific employee
             return View(await applicationDbContext.ToListAsync());
         }
@@ -85,6 +98,7 @@ namespace FarmersApp.Controllers
             }
             if (ModelState.IsValid)
             {
+                farmer.EmployeeId = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
                 _context.Add(farmer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index),new {id = 1});
@@ -152,7 +166,9 @@ namespace FarmersApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index), new { id = 1 });
+                var EmployeeID = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+
+                return RedirectToAction(nameof(Index), new { id = EmployeeID });
             }
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeId", farmer.EmployeeId);
             return View(farmer);
@@ -205,7 +221,9 @@ namespace FarmersApp.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var EmployeeID = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
+
+            return RedirectToAction(nameof(Index), new { id = EmployeeID });
         }
 
         private bool FarmerExists(int id)
