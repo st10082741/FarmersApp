@@ -112,6 +112,20 @@ namespace FarmersApp.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity != null)
+            {
+                if (User.IsInRole("Employee"))
+                {
+
+
+                    ViewData["EmployeeID"] = _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefault();
+                }
+                else
+                {
+                    ViewData["FarmerID"] = _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefault();
+
+                }
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
