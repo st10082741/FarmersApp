@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FarmersApp.Models
 {
@@ -9,6 +10,7 @@ namespace FarmersApp.Models
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime ProductionDate  { get; set; } = DateTime.Now;
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
         public int Farmer { get; set; }
    

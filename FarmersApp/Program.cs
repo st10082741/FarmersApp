@@ -2,6 +2,8 @@ using FarmersApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
+using FarmersApp;
+using static NuGet.Packaging.PackagingConstants;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Access configurationvar
 var configuration = builder.Configuration;
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AppFilter>();
+});
 // Added after the identity to recognise the pages as razor pages
 builder.Services.AddRazorPages();
 

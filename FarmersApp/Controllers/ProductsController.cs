@@ -39,20 +39,7 @@ namespace FarmersApp.Controllers
                 return RedirectToPage("/Account/Login", new { Area = "Identity" });
 
             }
-            if (User.Identity != null)
-            {
-                if (User.IsInRole("Employee"))
-                {
-
-
-                    ViewData["EmployeeID"] = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
-                }
-                else
-                {
-                    ViewData["FarmerID"] = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
-
-                }
-            }
+           
             var applicationDbContext = _context.Products.Include(p => p.Category).Include(p => p.FarmerNavigation).Where(e => e.FarmerNavigation.FarmerId == id);
             return View(await applicationDbContext.ToListAsync());
         }

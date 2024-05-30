@@ -18,20 +18,7 @@ namespace FarmersApp.Controllers
         public async Task<IActionResult> Index()
         {
 
-            if (User.Identity != null)
-            {
-                if (User.IsInRole("Employee"))
-                {
-
-
-                    ViewData["EmployeeID"] = await _context.Employees.Where(x => x.Email == User.Identity.Name).Select(x => x.EmployeeId).FirstOrDefaultAsync();
-                }
-                else
-                {
-                    ViewData["FarmerID"] = await _context.Farmers.Where(x => x.Email == User.Identity.Name).Select(x => x.FarmerId).FirstOrDefaultAsync();
-
-                }
-            }
+           
             return View();
         }
         public IActionResult Privacy()
