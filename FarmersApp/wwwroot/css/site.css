@@ -14,5 +14,28 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-image: url('../Image/farmer.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.table{
+    background-color:white!important;
+}
+h4 {
+    color: black !important;
+    padding: 8px;
+    background-color: white !important;
+    width:40%!important;
+    margin-left:30%;
+    margin-right: 30%;
+    text-align:center!important;
+}
+p a{
+    color:white!important;
+    font-weight:bold!important;
+}
+h3 {
+    color: white !important;
 }

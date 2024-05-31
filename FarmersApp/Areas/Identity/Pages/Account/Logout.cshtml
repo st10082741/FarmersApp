@@ -3,9 +3,14 @@
 @{
     ViewData["Title"] = "Log out";
 }
-
+<style> 
+    .form-inline{
+        background-color:white!important;
+        color:black!important;
+    }
+</style>
 <header>
-    <h1>@ViewData["Title"]</h1>
+    <h3>@ViewData["Title"]</h3>
     @{
         if (User.Identity?.IsAuthenticated ?? false)
         {
